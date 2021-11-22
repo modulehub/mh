@@ -16,18 +16,16 @@ limitations under the License.
 package cmd
 
 import (
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
 
-	"github.com/gojek/heimdall/httpclient"
+	"github.com/modulehub/mh/utility"
+
 	"github.com/manifoldco/promptui"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // deleteCmd represents the delete command
@@ -62,13 +60,8 @@ to quickly create a Cobra application.`,
 			return
 		}
 
-		bkey := []byte(viper.GetString("email") + ":" + viper.GetString("apikey"))
-		key := base64.StdEncoding.EncodeToString(bkey)
-		// Create a new HTTP client with a default timeout
-		timeout := 1000 * time.Millisecond
-		client := httpclient.NewClient(httpclient.WithHTTPTimeout(timeout))
+		client := utility.GetClient()
 		headers := http.Header{}
-		headers.Set("Authorization", "Basic "+key)
 
 		res, err := client.Delete("http://localhost:81/api/organizations/modulehub/states/288319c1-3ce7-4bf3-910b-50a75faa7f64", headers)
 		if err != nil {

@@ -16,8 +16,9 @@ limitations under the License.
 package cmd
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/modulehub/mh/utility"
 	log "github.com/sirupsen/logrus"
@@ -26,6 +27,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
+
+type RegisterResponse struct {
+	Key string `json:"key"`
+}
 
 // registerCmd represents the register command
 var registerCmd = &cobra.Command{
@@ -61,7 +66,34 @@ to quickly create a Cobra application.`,
 
 		// Create a new HTTP client with a default timeout
 		//
-		fmt.Println("fooString is: ", viper.GetString("apikey"))
+		client := utility.GetClient()
+		postBody, _ := json.Marshal(map[string]string{
+			"email": result,
+		})
+		responseBody := bytes.NewBuffer(postBody) // Use the clients GET method to create and execute the request
+		res, err := client.Post("users?type=cli", responseBody)
+		if err != nil {
+			panic(err)
+		}
+
+		// Heimdall returns the standard *http.Response object
+		// body, err := ioutil.ReadAll(res.Body)
+
+		var key RegisterResponse
+
+		if err := json.NewDecoder(res.Body).Decode(&key); err != nil {
+			log.Println(err)
+		}
+		log.Println(key)
+
+		viper.Set("email", result)
+		viper.Set("apikey", key)
+
+		if err := viper.WriteConfig(); err != nil {
+			log.Println(err)
+		}
+
+		// log.Println(string(body))
 	},
 }
 
