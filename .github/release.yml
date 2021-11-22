@@ -1,0 +1,66 @@
+name: Automatic release
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    name: Build binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: [arm64, amd64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.17" # The Go version to download (if necessary) and use.
+
+      - name: Build binary ${{ matrix.goos }}/${{ matrix.goarch }}
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: make build-ci
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact_${{ matrix.goos }}_${{ matrix.goarch }}
+          path: bin/bot_${{ matrix.goos }}_${{ matrix.goarch }}.tar.gz
+
+  release:
+    name: Create new release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download build linux/amd64
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact_linux_amd64
+
+      - name: Download build linux/arm64
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact_linux_arm64
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            bot_linux_amd64.tar.gz
+            bot_linux_arm64.tar.gz
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
