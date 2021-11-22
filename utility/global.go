@@ -5,7 +5,7 @@ import "net/url"
 var baseURL = url.URL{
 	Scheme: "http",
 	Host:   "localhost:81",
-	Path:   "/api/",
+	Path:   "/api",
 }
 
 //GetUrl return api url

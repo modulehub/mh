@@ -30,6 +30,7 @@ import (
 
 type RegisterResponse struct {
 	Key string `json:"key"`
+	Org string `jsong:"org"`
 }
 
 // registerCmd represents the register command
@@ -71,10 +72,12 @@ to quickly create a Cobra application.`,
 			"email": result,
 		})
 		responseBody := bytes.NewBuffer(postBody) // Use the clients GET method to create and execute the request
-		res, err := client.Post("users?type=cli", responseBody)
+		res, err := client.Post("/users?type=cli", responseBody)
 		if err != nil {
 			panic(err)
 		}
+
+		log.Warn(res.Body)
 
 		// Heimdall returns the standard *http.Response object
 		// body, err := ioutil.ReadAll(res.Body)
@@ -87,7 +90,8 @@ to quickly create a Cobra application.`,
 		log.Println(key)
 
 		viper.Set("email", result)
-		viper.Set("apikey", key)
+		viper.Set("apikey", key.Key)
+		viper.Set("organization", key.Org)
 
 		if err := viper.WriteConfig(); err != nil {
 			log.Println(err)

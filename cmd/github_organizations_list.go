@@ -16,15 +16,20 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
+	"fmt"
 	"log"
+	"strings"
 
-	"github.com/modulehub/mh/utility"
+	"github.com/google/go-github/github"
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"golang.org/x/oauth2"
 )
 
 // listCmd represents the list command
-var listCmd = &cobra.Command{
+var listGithubOrgsCmd = &cobra.Command{
 	Use:   "list",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -34,22 +39,58 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Println("create called")
-		// Create a new HTTP client with a default timeout
-		//
-		client := utility.GetClient()
-		res, err := client.Get("/organizations/"+viper.GetString("organization")+"/states", nil)
-		if err != nil {
-			panic(err)
+		fmt.Println("list called")
+		if viper.GetString("token") == "" {
+			log.Fatal("configure your PAT token before calling this command")
+		}
+		ctx := context.Background()
+		ts := oauth2.StaticTokenSource(
+			&oauth2.Token{AccessToken: viper.GetString("token")},
+		)
+		tc := oauth2.NewClient(ctx, ts)
+
+		client := github.NewClient(tc)
+
+		// list all repositories for the authenticated user
+		orgs, _, err := client.Organizations.List(ctx, "", nil)
+		// log.Print(orgs)
+
+		var organizations []string
+		var organization *github.Organization
+		for _, organization = range orgs {
+			strPointerValue := *organization.Login
+			organizations = append(organizations, strPointerValue)
+		}
+		log.Print(err)
+
+		searcher := func(input string, index int) bool {
+			org := organizations[index]
+			name := strings.Replace(strings.ToLower(org), " ", "", -1)
+			input = strings.Replace(strings.ToLower(input), " ", "", -1)
+
+			return strings.Contains(name, input)
 		}
 
-		log.Println(res)
+		prompt := promptui.Select{
+			Label:    "Pick org",
+			Items:    organizations,
+			Size:     4,
+			Searcher: searcher,
+		}
 
+		i, _, err := prompt.Run()
+
+		if err != nil {
+			fmt.Printf("Prompt failed %v\n", err)
+			return
+		}
+
+		fmt.Printf("You choose number %d: %s\n", i+1, organizations[i])
 	},
 }
 
 func init() {
-	stateCmd.AddCommand(listCmd)
+	organizationsCmd.AddCommand(listGithubOrgsCmd)
 
 	// Here you will define your flags and configuration settings.
 

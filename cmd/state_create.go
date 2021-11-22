@@ -16,20 +16,25 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"time"
+	"os"
 
+	"github.com/spf13/viper"
+
+	"github.com/modulehub/mh/utility"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/gojek/heimdall/httpclient"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+
+	"html/template"
 )
+
+type StateResponse struct {
+	Data struct {
+		ID string `json:"id"`
+	}
+}
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
@@ -43,26 +48,46 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("create called")
-		bkey := []byte(viper.GetString("email") + ":" + viper.GetString("apikey"))
-		key := base64.StdEncoding.EncodeToString(bkey)
 		// Create a new HTTP client with a default timeout
-		timeout := 1000 * time.Millisecond
-		client := httpclient.NewClient(httpclient.WithHTTPTimeout(timeout))
-		headers := http.Header{}
-		headers.Set("Authorization", "Basic "+key)
-		postBody, _ := json.Marshal(map[string]string{
-			"name":  "Toby",
-			"email": "Toby@example.com",
-		})
-		responseBody := bytes.NewBuffer(postBody) // Use the clients GET method to create and execute the request
-		res, err := client.Post("http://localhost:81/api/organizations/modulehub/states", responseBody, headers)
+		//
+		client := utility.GetClient()
+		res, err := client.Post("/organizations/"+viper.GetString("organization")+"/states", nil)
 		if err != nil {
 			panic(err)
 		}
 
 		// Heimdall returns the standard *http.Response object
-		body, err := ioutil.ReadAll(res.Body)
-		log.Println(string(body))
+		var state StateResponse
+		if err := json.NewDecoder(res.Body).Decode(&state); err != nil {
+			log.Fatal(err)
+		}
+
+		log.Info(fmt.Sprintf("state id: %s created.", state.Data.ID))
+
+		tmpl := `
+Usage:
+
+terraform {
+	backend "http" {
+		username = "{{ .username }}"
+		password = "{{ .key }}"
+		address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}"
+		lock_address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}/lock"
+		unlock_address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}/unlock"
+		lock_method = "POST"
+		unlock_method = "POST"
+	}
+}
+		`
+
+		t, err := template.New("todos").Parse(tmpl)
+		if err != nil {
+			panic(err)
+		}
+		err = t.Execute(os.Stdout, map[string]string{"ID": state.Data.ID, "key": viper.GetString("apikey"), "username": viper.GetString("email")})
+		if err != nil {
+			panic(err)
+		}
 	},
 }
 

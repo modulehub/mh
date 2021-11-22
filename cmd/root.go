@@ -18,6 +18,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
 
@@ -36,6 +39,14 @@ examples and usage of using your application. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		// if cmd.CalledAs() != "init" {
+		// 	if err := viper.ReadInConfig(); err != nil {
+		// 		fmt.Println("Run init first")
+		// 		os.Exit(1)
+		// 	}
+		// }
+	},
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -66,20 +77,28 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
+	// stub init
+	configHome, err := os.UserHomeDir()
+	cobra.CheckErr(err)
 
-		// Search config in home directory with name ".mh" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".mh")
+	configName := ".mh"
+	configType := "yaml"
+	configPath := filepath.Join(configHome, configName+"."+configType)
+	// ----
+
+	viper.AddConfigPath(configHome)
+	viper.SetConfigName(configName)
+	viper.SetConfigType(configType)
+
+	_, err = os.OpenFile(configPath, os.O_CREATE, 0644)
+	if err != nil { // handle failed create
+		log.Println(err)
+	} else {
+		log.Println("config file created")
 	}
 
+	// Find home directory.
+	// Search config in home directory with name ".mh" (without extension).
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.

@@ -3,7 +3,6 @@ package utility
 import (
 	"encoding/base64"
 	"io"
-	"log"
 	"net/http"
 	"time"
 
@@ -45,7 +44,7 @@ func (c *Client) Get(path string, headers http.Header) (*http.Response, error) {
 		return response, errors.Wrap(err, "GET - request creation failed")
 	}
 
-	request.Header = headers
+	c.addDefaultHeaders(request)
 
 	return c.c.Do(request)
 }
@@ -53,14 +52,11 @@ func (c *Client) Get(path string, headers http.Header) (*http.Response, error) {
 // Post makes a HTTP POST request to provided URL and requestBody
 func (c *Client) Post(path string, body io.Reader) (*http.Response, error) {
 	url := getURL(path)
-	log.Println(url)
 	var response *http.Response
 	request, err := http.NewRequest(http.MethodPost, url, body)
 	if err != nil {
 		return response, errors.Wrap(err, "POST - request creation failed")
 	}
-
-	// request.Header = headers
 
 	c.addDefaultHeaders(request)
 
