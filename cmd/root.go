@@ -94,7 +94,7 @@ func initConfig() {
 	if err != nil { // handle failed create
 		log.Println(err)
 	} else {
-		log.Println("config file created")
+		log.Println("config file exists")
 	}
 
 	// Find home directory.

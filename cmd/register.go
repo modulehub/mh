@@ -29,6 +29,9 @@ import (
 )
 
 type RegisterResponse struct {
+	Data struct {
+		Email string `json:"email"`
+	}
 	Key string `json:"key"`
 	Org string `jsong:"org"`
 }
@@ -77,11 +80,7 @@ to quickly create a Cobra application.`,
 			panic(err)
 		}
 
-		log.Warn(res.Body)
-
 		// Heimdall returns the standard *http.Response object
-		// body, err := ioutil.ReadAll(res.Body)
-
 		var key RegisterResponse
 
 		if err := json.NewDecoder(res.Body).Decode(&key); err != nil {
@@ -89,7 +88,7 @@ to quickly create a Cobra application.`,
 		}
 		log.Println(key)
 
-		viper.Set("email", result)
+		viper.Set("email", key.Data.Email)
 		viper.Set("apikey", key.Key)
 		viper.Set("organization", key.Org)
 

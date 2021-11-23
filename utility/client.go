@@ -6,7 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gojek/heimdall/httpclient"
+	"github.com/gojek/heimdall/v7/httpclient"
+	"github.com/gojek/heimdall/v7/plugins"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -17,12 +18,26 @@ type Client struct {
 
 func GetClient() *Client {
 	// Create a new HTTP client with a default timeout
-	timeout := 1000 * time.Millisecond
+	// initalTimeout := 2 * time.Millisecond         // Inital timeout
+	// maxTimeout := 9 * time.Millisecond            // Max time out
+	// var exponentFactor float64 = 2                // Multiplier
+	// maximumJitterInterval := 2 * time.Millisecond // Max jitter interval. It must be more than 1*time.Millisecond
 
-	c := httpclient.NewClient(httpclient.WithHTTPTimeout(timeout))
+	// backoff := heimdall.NewExponentialBackoff(initalTimeout, maxTimeout, exponentFactor, maximumJitterInterval)
+
+	// // Create a new retry mechanism with the backoff
+	// retrier := heimdall.NewRetrier(backoff)
+
+	timeout := 5 * time.Second
+	// Create a new client, sets the retry mechanism, and the number of times you would like to retry
+	client := httpclient.NewClient(
+		httpclient.WithHTTPTimeout(timeout),
+	)
+	requestLogger := plugins.NewRequestLogger(nil, nil)
+	client.AddPlugin(requestLogger)
 
 	return &Client{
-		c: c,
+		c: client,
 	}
 
 	// res, err := client.Delete("http://localhost:81/api/organizations/modulehub/states/288319c1-3ce7-4bf3-910b-50a75faa7f64", headers)
