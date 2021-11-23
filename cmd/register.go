@@ -81,6 +81,7 @@ to quickly create a Cobra application.`,
 		}
 
 		// Heimdall returns the standard *http.Response object
+
 		var key RegisterResponse
 
 		if err := json.NewDecoder(res.Body).Decode(&key); err != nil {

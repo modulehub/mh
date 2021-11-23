@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"io/ioutil"
 	"log"
 
 	"github.com/modulehub/mh/utility"
@@ -43,8 +44,8 @@ to quickly create a Cobra application.`,
 			panic(err)
 		}
 
-		log.Println(res)
-
+		body, err := ioutil.ReadAll(res.Body)
+		log.Println(string(body))
 	},
 }
 
