@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-//GetUrl return api url
+//GetURL return api url
 func GetURL() url.URL {
 	var baseURL = url.URL{
 		Scheme: viper.GetString("api_scheme"),

@@ -16,18 +16,8 @@ type Client struct {
 	c *httpclient.Client
 }
 
+// GetClient provides a generic instance of http client
 func GetClient() *Client {
-	// Create a new HTTP client with a default timeout
-	// initalTimeout := 2 * time.Millisecond         // Inital timeout
-	// maxTimeout := 9 * time.Millisecond            // Max time out
-	// var exponentFactor float64 = 2                // Multiplier
-	// maximumJitterInterval := 2 * time.Millisecond // Max jitter interval. It must be more than 1*time.Millisecond
-
-	// backoff := heimdall.NewExponentialBackoff(initalTimeout, maxTimeout, exponentFactor, maximumJitterInterval)
-
-	// // Create a new retry mechanism with the backoff
-	// retrier := heimdall.NewRetrier(backoff)
-
 	timeout := 5 * time.Second
 	// Create a new client, sets the retry mechanism, and the number of times you would like to retry
 	client := httpclient.NewClient(
@@ -39,15 +29,6 @@ func GetClient() *Client {
 	return &Client{
 		c: client,
 	}
-
-	// res, err := client.Delete("http://localhost:81/api/organizations/modulehub/states/288319c1-3ce7-4bf3-910b-50a75faa7f64", headers)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// // Heimdall returns the standard *http.Response object
-	// body, err := ioutil.ReadAll(res.Body)
-	// log.Println(string(body))
-
 }
 
 // Get makes a HTTP GET request to provided URL
