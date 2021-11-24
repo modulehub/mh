@@ -31,6 +31,8 @@ to quickly create a Cobra application.`,
 
 		body, err := ioutil.ReadAll(res.Body)
 		log.Println(string(body))
+		log.Println(err)
+
 	},
 }
 
