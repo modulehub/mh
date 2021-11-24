@@ -34,7 +34,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		validate := func(input string) error {
-			if ok := utility.ValidateEmail(input); ok == false {
+			if ok := utility.ValidateEmail(input); !ok {
 				return errors.New("Invalid email")
 			}
 			return nil

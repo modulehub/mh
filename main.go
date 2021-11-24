@@ -16,8 +16,6 @@ limitations under the License.
 package main
 
 import (
-	"os"
-
 	log "github.com/sirupsen/logrus"
 
 	"github.com/joho/godotenv"
@@ -25,10 +23,6 @@ import (
 )
 
 func main() {
-	env := os.Getenv("MH_ENV")
-	if "" == env {
-		env = "development"
-	}
 	err := godotenv.Load()
 	if err != nil {
 		log.Info("No .env file found")
