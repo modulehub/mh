@@ -26,7 +26,7 @@ build:  ## Builds the bot binary
 build-ci: ## Optimized build for CI
 	@echo $(goos)/$(goarch)
 	go build -ldflags=$(LDFLAGS) -o ./bin/bot_$(goos)_$(goarch) .
-	cd ./bin && tar -czvf bot_$(goos)_$(goarch).tar.gz ./bot_$(goos)_$(goarch) ../LICENSE && cd ./..
+	cd ./bin && tar -czvf bot_$(goos)_$(goarch).tar.gz ./mh_$(goos)_$(goarch) ../LICENSE && cd ./..
 
 release: ## Release with a new tag. Use like this: 'VERSION=v0.0.1 make release'
 	git-chglog --next-tag $(VERSION) -o CHANGELOG.md
