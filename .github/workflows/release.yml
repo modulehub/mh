@@ -7,8 +7,8 @@ name: Automatic release
 
 on:
   push:
-    branches:
-      - "main"
+    release:
+      - "v.*.*.*"
 
 jobs:
   build:

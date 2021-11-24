@@ -1,14 +1,17 @@
 package utility
 
-import "net/url"
+import (
+	"net/url"
 
-var baseURL = url.URL{
-	Scheme: "http",
-	Host:   "localhost:81",
-	Path:   "/api",
-}
+	"github.com/spf13/viper"
+)
 
 //GetUrl return api url
 func GetURL() url.URL {
+	var baseURL = url.URL{
+		Scheme: viper.GetString("api_scheme"),
+		Host:   viper.GetString("api_host"),
+		Path:   "/api",
+	}
 	return baseURL
 }

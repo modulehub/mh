@@ -85,6 +85,7 @@ func initConfig() {
 	configType := "yaml"
 	configPath := filepath.Join(configHome, configName+"."+configType)
 	// ----
+	viper.SetEnvPrefix("mh") // will be uppercased automatically
 
 	viper.AddConfigPath(configHome)
 	viper.SetConfigName(configName)
@@ -96,6 +97,13 @@ func initConfig() {
 	} else {
 		log.Println("config file exists")
 	}
+	viper.SetDefault("app_url", "https://app.modulehub.io")
+
+	viper.SetDefault("api_host", "api.v2.modulehub.io")
+
+	viper.SetDefault("api_scheme", viper.GetString("api_scheme"))
+
+	viper.SetDefault("api_url", viper.GetString("api_host"))
 
 	// Find home directory.
 	// Search config in home directory with name ".mh" (without extension).
