@@ -61,6 +61,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            bot_linux_amd64.tar.gz
-            bot_linux_arm64.tar.gz
-          body_path: ${{ github.workspace }}-CHANGELOG.txt
+            mh_linux_amd64.tar.gz
+            mh_linux_arm64.tar.gz
