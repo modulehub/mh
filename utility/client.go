@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+//Client serves as a wrapper for out client
 type Client struct {
 	c *httpclient.Client
 }
