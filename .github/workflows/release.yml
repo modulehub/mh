@@ -57,9 +57,21 @@ jobs:
         with:
           name: artifact_linux_arm64
 
+      - name: Download build darwin/amd64
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact_darwin_amd64
+
+      - name: Download build darwin/arm64
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact_darwin_arm64
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             mh_linux_amd64.tar.gz
             mh_linux_arm64.tar.gz
+            mh_darwin_amd64.tar.gz
+            mh_darwin_arm64.tar.gz
