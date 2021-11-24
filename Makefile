@@ -20,13 +20,13 @@ prepare: ## Download depencies and prepare dev env
 	@go mod download
 	@go mod vendor
 
-build:  ## Builds the bot binary
-	@go build -ldflags=$(LDFLAGS) -o ./bin/bot main.go
+build:  ## Builds the mh binary
+	@go build -ldflags=$(LDFLAGS) -o ./bin/mh main.go
 
 build-ci: ## Optimized build for CI
 	@echo $(goos)/$(goarch)
-	go build -ldflags=$(LDFLAGS) -o ./bin/bot_$(goos)_$(goarch) .
-	cd ./bin && tar -czvf bot_$(goos)_$(goarch).tar.gz ./mh_$(goos)_$(goarch) ../LICENSE && cd ./..
+	go build -ldflags=$(LDFLAGS) -o ./bin/mh_$(goos)_$(goarch) .
+	cd ./bin && tar -czvf mh_$(goos)_$(goarch).tar.gz ./mh_$(goos)_$(goarch) ../LICENSE && cd ./..
 
 release: ## Release with a new tag. Use like this: 'VERSION=v0.0.1 make release'
 	git-chglog --next-tag $(VERSION) -o CHANGELOG.md
