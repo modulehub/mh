@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: artifact_${{ matrix.goos }}_${{ matrix.goarch }}
-          path: bin/bot_${{ matrix.goos }}_${{ matrix.goarch }}.tar.gz
+          path: bin/mh_${{ matrix.goos }}_${{ matrix.goarch }}.tar.gz
 
   release:
     name: Create new release
