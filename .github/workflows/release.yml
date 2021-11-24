@@ -7,7 +7,7 @@ name: Automatic release
 
 on:
   push:
-    release:
+    tags:
       - "v.*.*.*"
 
 jobs:
