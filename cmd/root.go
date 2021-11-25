@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -13,6 +12,10 @@ import (
 )
 
 var cfgFile string
+
+var version string
+
+var CredentialsViper *viper.Viper
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -32,6 +35,7 @@ to quickly create a Cobra application.`,
 		// 	}
 		// }
 	},
+	Version: version, //this field has to be set in order to have --version working
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -69,36 +73,40 @@ func initConfig() {
 	configHome, err := os.UserHomeDir()
 	cobra.CheckErr(err)
 
+	viper.SetDefault("app_url", "https://app.modulehub.io")
+	viper.SetDefault("api_url", "https://api.v2.modulehub.io")
+
 	configName := ".mh"
 	configType := "yaml"
 	configPath := filepath.Join(configHome, configName+"."+configType)
+
+	_, err = os.OpenFile(configPath, os.O_CREATE, 0644)
+	if err != nil { // handle failed create
+		log.Println(err)
+	} else {
+		log.Info("config file exists")
+	}
 	// ----
 	viper.SetEnvPrefix("mh") // will be uppercased automatically
 
 	viper.AddConfigPath(configHome)
 	viper.SetConfigName(configName)
 	viper.SetConfigType(configType)
-
-	_, err = os.OpenFile(configPath, os.O_CREATE, 0644)
+	err = viper.ReadInConfig()
 	if err != nil { // handle failed create
 		log.Println(err)
-	} else {
-		log.Println("config file exists")
 	}
-	viper.SetDefault("app_url", "https://app.modulehub.io")
 
-	viper.SetDefault("api_host", "api.v2.modulehub.io")
-
-	viper.SetDefault("api_scheme", viper.GetString("api_scheme"))
-
-	viper.SetDefault("api_url", viper.GetString("api_host"))
+	viper.SetConfigName(".mh.local")
+	viper.AddConfigPath(".")
+	err = viper.MergeInConfig()
+	if err != nil { // handle failed create
+		log.Println(err)
+	}
 
 	// Find home directory.
 	// Search config in home directory with name ".mh" (without extension).
 	viper.AutomaticEnv() // read in environment variables that match
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	}
+	// log.Info(viper.AllSettings())
 }

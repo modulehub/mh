@@ -1,4 +1,4 @@
-package utility
+package util
 
 import (
 	"encoding/base64"
@@ -103,7 +103,10 @@ func (c *Client) Delete(path string, headers http.Header) (*http.Response, error
 }
 
 func getURL(path string) string {
-	baseURL := GetURL()
+	baseURL, err := GetURL()
+	if err != nil {
+		panic("api url is not valid")
+	}
 	return baseURL.String() + path
 }
 

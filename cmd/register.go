@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/modulehub/mh/utility"
+	"github.com/modulehub/mh/util"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/manifoldco/promptui"
@@ -34,7 +34,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		validate := func(input string) error {
-			if ok := utility.ValidateEmail(input); !ok {
+			if ok := util.ValidateEmail(input); !ok {
 				return errors.New("Invalid email")
 			}
 			return nil
@@ -56,7 +56,7 @@ to quickly create a Cobra application.`,
 
 		// Create a new HTTP client with a default timeout
 		//
-		client := utility.GetClient()
+		client := util.GetClient()
 		postBody, _ := json.Marshal(map[string]string{
 			"email": result,
 		})

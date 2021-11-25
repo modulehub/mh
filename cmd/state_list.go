@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/modulehub/mh/utility"
+	"github.com/modulehub/mh/util"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -23,7 +23,7 @@ to quickly create a Cobra application.`,
 		log.Println("create called")
 		// Create a new HTTP client with a default timeout
 		//
-		client := utility.GetClient()
+		client := util.GetClient()
 		res, err := client.Get("/organizations/"+viper.GetString("organization")+"/states", nil)
 		if err != nil {
 			panic(err)

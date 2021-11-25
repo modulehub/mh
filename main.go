@@ -16,18 +16,9 @@ limitations under the License.
 package main
 
 import (
-	log "github.com/sirupsen/logrus"
-
-	"github.com/joho/godotenv"
 	"github.com/modulehub/mh/cmd"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Info("No .env file found")
-	} else {
-		log.Info("Using .env file")
-	}
 	cmd.Execute()
 }

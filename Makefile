@@ -1,7 +1,7 @@
 GIT_REV?=$$(git rev-parse --short HEAD)
 DATE?=$$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 VERSION?=$$(git describe --tags --always)
-LDFLAGS="-s -w -X main.version=$(VERSION)-$(GIT_REV) -X main.date=$(DATE)"
+LDFLAGS="-s -w -X github.com/modulehub/mh/cmd.version=$(VERSION)-$(GIT_REV) -X main.date=$(DATE)"
 goos?=$$(go env GOOS)
 goarch?=$$(go env GOARCH)
 
@@ -20,7 +20,9 @@ prepare: ## Download depencies and prepare dev env
 	@go mod download
 	@go mod vendor
 
-build:  ## Builds the mh binary
+build:
+	## Builds the mh binary
+	set -x
 	@go build -ldflags=$(LDFLAGS) -o ./bin/mh main.go
 
 build-ci: ## Optimized build for CI
@@ -55,3 +57,9 @@ help: ## Show this help.
 
 chglog: ## Generate CHANGELOG.md
 	@git-chglog -o CHANGELOG.md
+
+run:
+	go run main.go $(filter-out $@,$(MAKECMDGOALS))
+
+%:      # thanks to chakrit
+	@:    # thanks to William Pursell
