@@ -4,6 +4,7 @@ VERSION?=$$(git describe --tags --always)
 LDFLAGS="-s -w -X github.com/modulehub/mh/cmd.version=$(VERSION)-$(GIT_REV) -X main.date=$(DATE)"
 goos?=$$(go env GOOS)
 goarch?=$$(go env GOARCH)
+file:=mh_$(goos)_$(goarch)
 
 GREEN  := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
@@ -27,8 +28,8 @@ build:
 
 build-ci: ## Optimized build for CI
 	@echo $(goos)/$(goarch)
-	go build -ldflags=$(LDFLAGS) -o ./bin/mh_$(goos)_$(goarch) .
-	cd ./bin && tar -czvf mh_$(goos)_$(goarch).tar.gz ./mh_$(goos)_$(goarch) ../LICENSE && cd ./..
+	go build -ldflags=$(LDFLAGS) -o ./bin/$(file) .
+	cd ./bin && tar -czvf $(file).tar.gz ./$(file) ../LICENSE && cd ./..
 
 release: ## Release with a new tag. Use like this: 'VERSION=v0.0.1 make release'
 	git-chglog --next-tag $(VERSION) -o CHANGELOG.md
