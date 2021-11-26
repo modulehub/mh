@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"io/ioutil"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/modulehub/mh/util"
 	"github.com/spf13/cobra"
@@ -20,7 +21,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Println("create called")
+		log.Info("create called")
 		// Create a new HTTP client with a default timeout
 		//
 		client := util.GetClient()
@@ -30,8 +31,8 @@ to quickly create a Cobra application.`,
 		}
 
 		body, err := ioutil.ReadAll(res.Body)
-		log.Println(string(body))
-		log.Println(err)
+		log.Info(string(body))
+		log.Info(err)
 
 	},
 }

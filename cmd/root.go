@@ -83,7 +83,7 @@ func initConfig() {
 
 	_, err = os.OpenFile(configPath, os.O_CREATE, 0644)
 	if err != nil { // handle failed create
-		log.Println(err)
+		log.Info(err)
 	} else {
 		log.Info("config file exists")
 	}
@@ -95,14 +95,14 @@ func initConfig() {
 	viper.SetConfigType(configType)
 	err = viper.ReadInConfig()
 	if err != nil { // handle failed create
-		log.Println(err)
+		log.Info(err)
 	}
 
 	viper.SetConfigName(".mh.local")
 	viper.AddConfigPath(".")
 	err = viper.MergeInConfig()
 	if err != nil { // handle failed create
-		log.Println(err)
+		log.Info(err)
 	}
 
 	// Find home directory.

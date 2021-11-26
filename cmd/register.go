@@ -71,19 +71,19 @@ to quickly create a Cobra application.`,
 		var key RegisterResponse
 
 		if err := json.NewDecoder(res.Body).Decode(&key); err != nil {
-			log.Println(err)
+			log.Info(err)
 		}
-		log.Println(key)
+		log.Info(key)
 
 		viper.Set("email", key.Data.Email)
 		viper.Set("apikey", key.Key)
 		viper.Set("organization", key.Org)
 
 		if err := viper.WriteConfig(); err != nil {
-			log.Println(err)
+			log.Info(err)
 		}
 
-		// log.Println(string(body))
+		// log.Info(string(body))
 	},
 }
 
