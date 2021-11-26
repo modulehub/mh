@@ -15,6 +15,7 @@ var cfgFile string
 
 var version string
 
+// CredentialsViper contain pointer to viper
 var CredentialsViper *viper.Viper
 
 // rootCmd represents the base command when called without any subcommands
