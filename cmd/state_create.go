@@ -44,8 +44,8 @@ to quickly create a Cobra application.`,
 
 		// Heimdall returns the standard *http.Response object
 		var state StateResponse
-		if err := json.NewDecoder(res.Body).Decode(&state); err != nil {
-			log.Fatal(err)
+		if e := json.NewDecoder(res.Body).Decode(&state); e != nil {
+			log.Fatal(e)
 		}
 
 		log.Info(fmt.Sprintf("state id: %s created.", state.Data.ID))

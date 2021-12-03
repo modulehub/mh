@@ -35,7 +35,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		validate := func(input string) error {
 			if ok := util.ValidateEmail(input); !ok {
-				return errors.New("Invalid email")
+				return errors.New("invalid email")
 			}
 			return nil
 		}
