@@ -27,8 +27,6 @@ func GetClient() *Client {
 	requestLogger := plugins.NewRequestLogger(nil, nil)
 	client.AddPlugin(requestLogger)
 
-	InitCredentialsViper()
-
 	return &Client{
 		c: client,
 	}

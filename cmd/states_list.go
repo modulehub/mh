@@ -1,7 +1,8 @@
 package cmd
 
 import (
-	"io/ioutil"
+	"encoding/json"
+	"fmt"
 
 	log "github.com/sirupsen/logrus"
 
@@ -9,6 +10,16 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
+
+//StateListResponse holds list of states
+type StateListResponse struct {
+	Data []State
+}
+
+//State type
+type State struct {
+	ID string
+}
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
@@ -30,9 +41,13 @@ to quickly create a Cobra application.`,
 			panic(err)
 		}
 
-		body, err := ioutil.ReadAll(res.Body)
-		log.Info(string(body))
-		log.Info(err)
+		var states StateListResponse
+		if e := json.NewDecoder(res.Body).Decode(&states); e != nil {
+			log.Fatal(e)
+		}
+		for _, state := range states.Data {
+			fmt.Println(state.ID)
+		}
 	},
 }
 

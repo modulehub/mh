@@ -15,6 +15,22 @@ import (
 	"html/template"
 )
 
+var stateTpl = `
+Usage:
+
+terraform {
+	backend "http" {
+		username = "{{ .username }}"
+		password = "{{ .key }}"
+		address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}"
+		lock_address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}/lock"
+		unlock_address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}/unlock"
+		lock_method = "POST"
+		unlock_method = "POST"
+	}
+}
+`
+
 //StateResponse holds the state response
 type StateResponse struct {
 	Data struct {
@@ -50,23 +66,7 @@ to quickly create a Cobra application.`,
 
 		log.Info(fmt.Sprintf("state id: %s created.", state.Data.ID))
 
-		tmpl := `
-Usage:
-
-terraform {
-	backend "http" {
-		username = "{{ .username }}"
-		password = "{{ .key }}"
-		address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}"
-		lock_address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}/lock"
-		unlock_address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}/unlock"
-		lock_method = "POST"
-		unlock_method = "POST"
-	}
-}
-		`
-
-		t, err := template.New("todos").Parse(tmpl)
+		t, err := template.New("states").Parse(stateTpl)
 		if err != nil {
 			panic(err)
 		}

@@ -13,12 +13,13 @@ var CredentialsViper *viper.Viper = viper.New()
 
 //InitCredentialsViper returns viper instance
 func InitCredentialsViper() {
+	log.Info("InitCredentialsViper")
 	// stub init
 	configHome, err := os.UserHomeDir()
 	if err != nil { // handle failed create
 		log.Fatal(err)
 	} else {
-		log.Info("can't access homedir")
+		log.Info("homedir access verified")
 	}
 
 	configName := ".mh.credentials"
@@ -47,5 +48,7 @@ func InitCredentialsViper() {
 
 //GetCredetialsViper instance
 func GetCredetialsViper() *viper.Viper {
+	log.Info("GetCredetialsViper")
+
 	return CredentialsViper
 }

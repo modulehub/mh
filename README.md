@@ -23,21 +23,17 @@ ModuleHub
 
 2.	Register for a free API key:
     ```sh
-    modulehub register
+    mh register
     ```
 
     The key is saved in `~/.mh.yaml`.
 
-Please **watch/star** this repo as we add new cloud resources every week or so.
+Please **watch/star** this repo! as we add new resources every week or so.
 
 ## Usage
-
-## CI/CD integrations
-
-## Supported clouds and resources
-
-## Contributing
-
+```sh
+mh
+```
 ## License
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
