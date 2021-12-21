@@ -4,11 +4,11 @@ set -e
 
 os=$(uname | tr '[:upper:]' '[:lower:]')
 arch=$(uname -m | tr '[:upper:]' '[:lower:]' | sed -e s/x86_64/amd64/)
-name="mh_${os}_${arch}"
+name="mh"
 url="https://github.com/modulehub/mh/releases/latest/download/$name.tar.gz"
 echo "Downloading latest release from ${url}..."
 curl -Lo ./mh.tar.gz ${url} || exit 1
 tar -xzf mh.tar.gz || exit 1
 chmod +x $name || exit 1
-mv mh_$name /usr/local/mh || exit 1
+mv $name /usr/local/mh || exit 1
 echo "Completed installing $(mh --version)"
