@@ -9,6 +9,6 @@ url="https://github.com/modulehub/mh/releases/latest/download/$name.tar.gz"
 echo "Downloading latest release from ${url}..."
 curl -Lo ./mh.tar.gz ${url} || exit 1
 tar -xzf mh.tar.gz || exit 1
-chmod +x mh_$name || exit 1
+chmod +x $name || exit 1
 mv mh_$name /usr/local/mh || exit 1
 echo "Completed installing $(mh --version)"
