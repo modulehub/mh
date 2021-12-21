@@ -1,11 +1,5 @@
-[![ModuleHub logo](.github/assets/logo.svg)](https://www.modulehub.io)
 
-<!-- <a href="https://www.modulehub.io/community-chat"><img alt="Community Slack channel" src="https://img.shields.io/badge/chat-Slack-%234a154b"/></a>
-<a href="https://github.com/modulehub/modulehub/actions?query=workflow%3AGo+branch%3Amaster"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/modulehub/modulehub/Go/master"/></a>
-<a href="https://hub.docker.com/r/modulehub/modulehub/tags"><img alt="Docker Image" src="https://img.shields.io/docker/cloud/build/modulehub/modulehub"/></a>
-<a href="https://twitter.com/intent/tweet?text=Get%20cost%20estimates%20for%20cloud%20infrastructure%20in%20pull%20requests!&url=https://www.modulehub.io&hashtags=cloud,cost,aws,IaC,terraform"><img alt="Tweet" src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social"/></a> -->
-
-<a href="https://www.modulehub.io/docs/"><img alt="Getting started" src="https://img.shields.io/badge/get%20started-blue?style=for-the-badge&logo=read-the-docs&label=docs"/></a> 
+<a href="https://www.modulehub.io/docs/intro"><img alt="Getting started" src="https://img.shields.io/badge/get%20started-blue?style=for-the-badge&logo=read-the-docs&label=docs"/></a> 
 
 ModuleHub
 
@@ -26,14 +20,14 @@ ModuleHub
     mh register
     ```
 
-    The key is saved in `~/.mh.yaml`.
+    The key is saved in `~/.modulehub` directory.
+3. Verify your account
+4. Play around!
 
 Please **watch/star** this repo! as we add new resources every week or so.
 
 ## Usage
+
 ```sh
 mh
 ```
-## License
-
-[Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
