@@ -72,7 +72,7 @@ func initConfig() {
 	cobra.CheckErr(err)
 
 	viper.SetDefault("app_url", "https://app.modulehub.io")
-	viper.SetDefault("api_url", "https://api.v2.modulehub.io")
+	viper.SetDefault("api_url", "https://api.v2.modulehub.io/api")
 	viper.SetDefault("registry_url", "https://registry.v2.modulehub.io")
 
 	configName := ".mh"
