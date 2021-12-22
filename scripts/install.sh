@@ -11,5 +11,5 @@ curl -Lo ./mh.tar.gz ${url} || exit 1
 tar -xzf mh.tar.gz || exit 1
 chmod +x mh || exit 1
 mv mh /usr/local/bin/mh || exit 1
-rm mh.tar.gz LICENCE || exit 1
+rm mh.tar.gz LICENSE || exit 1
 echo "Completed installing $(mh --version)"
