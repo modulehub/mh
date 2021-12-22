@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/modulehub/mh/util"
 	log "github.com/sirupsen/logrus"
@@ -19,8 +20,9 @@ type RegisterResponse struct {
 	Data struct {
 		Email string `json:"email"`
 	}
-	Key string `json:"key"`
-	Org string `jsong:"org"`
+	Key   string `json:"key"`
+	Org   string `jsong:"org"`
+	Error string
 }
 
 // registerCmd represents the register command
@@ -66,7 +68,6 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			panic(err)
 		}
-
 		// Heimdall returns the standard *http.Response object
 
 		var key RegisterResponse
@@ -74,6 +75,13 @@ to quickly create a Cobra application.`,
 		if err := json.NewDecoder(res.Body).Decode(&key); err != nil {
 			log.Info(err)
 		}
+
+		if res.StatusCode != 200 {
+			log.Info(res.StatusCode)
+			log.Error(key.Error) //TODO resolve the error in a nicer way..
+			os.Exit(1)
+		}
+
 		viper.Set("email", key.Data.Email)
 		viper.Set("apikey", key.Key)
 		viper.Set("organization", key.Org)
