@@ -105,10 +105,7 @@ func initConfig() {
 
 	viper.SetConfigName(".mh.local")
 	viper.AddConfigPath(".")
-	err = viper.MergeInConfig()
-	if err != nil { // handle failed create
-		log.Info(err)
-	}
+	_ = viper.MergeInConfig()
 
 	// Find home directory.
 	// Search config in home directory with name ".mh" (without extension).

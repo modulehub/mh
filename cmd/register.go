@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/modulehub/mh/util"
 	log "github.com/sirupsen/logrus"
@@ -81,7 +82,7 @@ to quickly create a Cobra application.`,
 			log.Info(err)
 		}
 
-		log.Println("Check your email for activation link")
+		fmt.Println("Check your email for activation link")
 	},
 }
 
