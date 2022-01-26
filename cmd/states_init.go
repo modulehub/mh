@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"os/exec"
 	"runtime"
-	"strings"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -21,6 +22,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("states init called")
 		var err error
@@ -29,19 +31,34 @@ to quickly create a Cobra application.`,
 		email := viper.GetString("email")
 		key := viper.GetString("apikey")
 		trCmd := "terraform"
-		params := []string{"init", "-backend-config=\"address=" + registryURL + "/modulehub/remote_states/${_REMOTE_STATE_ID}\"",
-			"-backend-config=\"lock_address=" + registryURL + "/modulehub/remote_states/${_REMOTE_STATE_ID}/lock\"",
-			"-backend-config=\"unlock_address=" + registryURL + "/modulehub/remote_states/${_REMOTE_STATE_ID}/unlock\"",
-			"-backend-config=\"username=" + email + "\"",
-			"-backend-config=\"password=" + key + "\"",
-			"-backend-config=\"lock_method=POST\"",
-			"-backend-config=\"unlock_method=POST\"",
+		pwd, _ := os.Getwd()
+		var sid string
+		if len(args) == 1 && args[0] != "" {
+			sid = args[0]
+		} else if _, errs := os.Stat(pwd + "/.mhrc"); errs == nil {
+			log.Info(".mhrc found")
+			file, erro := os.Open(".mhrc")
+			if erro != nil {
+				log.Fatal(err)
+			}
+			b, errb := ioutil.ReadAll(file)
+			if errb != nil {
+				log.Fatal(err)
+			}
+			sid = string(b)
 		}
-		prms := strings.Join(params, " ")
-		log.Info(trCmd + " " + prms)
+		log.Info(sid)
+		url := registryURL + "/modulehub/remote_states/" + sid
+		tfcmd := exec.Command(trCmd, "init", "-backend-config='address="+url+"'",
+			"-backend-config='lock_address= "+url+"/lock'",
+			"-backend-config='unlock_address="+url+"/unlock'",
+			"-backend-config='username="+email+"'",
+			"-backend-config='password="+key+"'",
+			"-backend-config='lock_method=POST'",
+			"-backend-config='unlock_method=POST'")
 		switch runtime.GOOS {
 		case "darwin":
-			otpt, err = exec.Command(trCmd, prms).Output()
+			otpt, err = tfcmd.Output()
 		default:
 			err = fmt.Errorf("unsupported platform")
 		}
