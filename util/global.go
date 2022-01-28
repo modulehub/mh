@@ -1,8 +1,12 @@
 package util
 
 import (
+	"errors"
+	"fmt"
 	"net/url"
 	"os"
+	"os/exec"
+	"runtime"
 
 	"github.com/spf13/viper"
 )
@@ -19,4 +23,23 @@ func GetEnv(name string, defVal string) string {
 	}
 
 	return defVal
+}
+
+//OpenURL opens a given url
+func OpenURL(url string) error {
+	var err error
+	if url != "" {
+		switch runtime.GOOS {
+		case "linux":
+			err = exec.Command("xdg-open", url).Start()
+		case "windows":
+			err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+		case "darwin":
+			err = exec.Command("open", url).Start()
+		default:
+			err = fmt.Errorf("unsupported platform")
+		}
+		return err
+	}
+	return errors.New("please provide a valid url")
 }

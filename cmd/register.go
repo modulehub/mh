@@ -1,18 +1,9 @@
 package cmd
 
 import (
-	"bytes"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"os"
-
 	"github.com/modulehub/mh/util"
 	log "github.com/sirupsen/logrus"
-
-	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 //RegisterResponse contains the result of user registration
@@ -36,61 +27,66 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		validate := func(input string) error {
-			if ok := util.ValidateEmail(input); !ok {
-				return errors.New("invalid email")
-			}
-			return nil
-		}
+		// validate := func(input string) error {
+		// 	if ok := util.ValidateEmail(input); !ok {
+		// 		return errors.New("invalid email")
+		// 	}
+		// 	return nil
+		// }
 
-		prompt := promptui.Prompt{
-			Label:    "Github account email",
-			Validate: validate,
-		}
+		// prompt := promptui.Prompt{
+		// 	Label:    "Github account email",
+		// 	Validate: validate,
+		// }
 
-		result, err := prompt.Run()
+		// result, err := prompt.Run()
 
+		// if err != nil {
+		// 	log.Printf("Prompt failed %v\n", err)
+		// 	return
+		// }
+
+		// log.Printf("Your mail: %q\n", result)
+
+		// // Create a new HTTP client with a default timeout
+		// //
+		// client := util.GetClient()
+		// postBody, _ := json.Marshal(map[string]string{
+		// 	"email": result,
+		// })
+		// responseBody := bytes.NewBuffer(postBody) // Use the clients GET method to create and execute the request
+		// res, err := client.Post("/users?type=cli", responseBody)
+		// if err != nil {
+		// 	panic(err)
+		// }
+		// // Heimdall returns the standard *http.Response object
+
+		// var key RegisterResponse
+
+		// if err := json.NewDecoder(res.Body).Decode(&key); err != nil {
+		// 	log.Info(err)
+		// }
+
+		// if res.StatusCode != 200 {
+		// 	log.Info(res.StatusCode)
+		// 	log.Error(key.Error) //TODO resolve the error in a nicer way..
+		// 	os.Exit(1)
+		// }
+
+		// viper.Set("email", key.Data.Email)
+		// viper.Set("apikey", key.Key)
+		// viper.Set("organization", key.Org)
+
+		// if err := viper.WriteConfig(); err != nil {
+		// 	log.Info(err)
+		// }
+
+		// fmt.Println("Check your email for activation link")
+
+		err := util.OpenURL("https://app.modulehub.io/")
 		if err != nil {
-			log.Printf("Prompt failed %v\n", err)
-			return
+			log.Error(err)
 		}
-
-		log.Printf("Your mail: %q\n", result)
-
-		// Create a new HTTP client with a default timeout
-		//
-		client := util.GetClient()
-		postBody, _ := json.Marshal(map[string]string{
-			"email": result,
-		})
-		responseBody := bytes.NewBuffer(postBody) // Use the clients GET method to create and execute the request
-		res, err := client.Post("/users?type=cli", responseBody)
-		if err != nil {
-			panic(err)
-		}
-		// Heimdall returns the standard *http.Response object
-
-		var key RegisterResponse
-
-		if err := json.NewDecoder(res.Body).Decode(&key); err != nil {
-			log.Info(err)
-		}
-
-		if res.StatusCode != 200 {
-			log.Info(res.StatusCode)
-			log.Error(key.Error) //TODO resolve the error in a nicer way..
-			os.Exit(1)
-		}
-
-		viper.Set("email", key.Data.Email)
-		viper.Set("apikey", key.Key)
-		viper.Set("organization", key.Org)
-
-		if err := viper.WriteConfig(); err != nil {
-			log.Info(err)
-		}
-
-		fmt.Println("Check your email for activation link")
 	},
 }
 

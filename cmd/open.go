@@ -1,12 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-	"os/exec"
-	"runtime"
-
 	log "github.com/sirupsen/logrus"
 
+	"github.com/modulehub/mh/util"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -23,27 +20,11 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Info("open called")
-		var err error
 		url := viper.GetString("app_url")
 		log.Info(url)
-		if url != "" {
-			switch runtime.GOOS {
-			case "linux":
-				err = exec.Command("xdg-open", url).Start()
-			case "windows":
-				err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
-			case "darwin":
-				err = exec.Command("open", url).Start()
-			default:
-				err = fmt.Errorf("unsupported platform")
-			}
-			if err != nil {
-				log.Fatal(err)
-			} else {
-				log.Info("opened")
-			}
-		} else {
-			log.Info("url is empty")
+		err := util.OpenURL(url)
+		if err != nil {
+			log.Error(err)
 		}
 	},
 }

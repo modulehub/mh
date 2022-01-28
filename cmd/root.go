@@ -15,6 +15,8 @@ var cfgFile string
 
 var version string
 
+var force bool
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "mh",
@@ -25,14 +27,14 @@ examples and usage of using your application. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		// if cmd.CalledAs() != "init" {
-		// 	if err := viper.ReadInConfig(); err != nil {
-		// 		fmt.Println("Run init first")
-		// 		os.Exit(1)
-		// 	}
-		// }
-	},
+	// PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	// 	// if cmd.CalledAs() != "init" {
+	// 	// 	if err := viper.ReadInConfig(); err != nil {
+	// 	// 		fmt.Println("Run init first")
+	// 	// 		os.Exit(1)
+	// 	// 	}
+	// 	// }
+	// },
 	Version: version, //this field has to be set in order to have --version working
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
@@ -62,7 +64,12 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	rootCmd.PersistentFlags().BoolVarP(&force, "force", "f", false, "verbose output")
 
+	errf := viper.BindPFlag("force", rootCmd.PersistentFlags().Lookup("force"))
+	if errf != nil {
+		log.Fatal(err)
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.
