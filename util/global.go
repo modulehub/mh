@@ -7,13 +7,11 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-
-	"github.com/spf13/viper"
 )
 
 //GetURL return api url
 func GetURL() (*url.URL, error) {
-	return url.Parse(viper.GetString("api_url"))
+	return url.Parse(os.Getenv("MH_API_BASE_URL"))
 }
 
 //GetEnv loads value from env if exists with fallback to a provided default value

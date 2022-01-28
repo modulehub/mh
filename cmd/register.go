@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/modulehub/mh/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -83,7 +85,7 @@ to quickly create a Cobra application.`,
 
 		// fmt.Println("Check your email for activation link")
 
-		err := util.OpenURL("https://app.modulehub.io/")
+		err := util.OpenURL(os.Getenv(("MH_APP_BASE_URL")))
 		if err != nil {
 			log.Error(err)
 		}
