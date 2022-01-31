@@ -23,11 +23,27 @@ import (
 )
 
 func main() {
-	os.Setenv("MH_API_BASE_URL", "https://api.v2.modulehub.io/")
-	os.Setenv("MH_APP_BASE_URL", "https://app.modulehub.io/")
-	os.Setenv("MH_APP_TERRAFORM_REGISTRY_URL", "https://registry.v2.modulehub.io/")
-	os.Setenv("MH_APP_HELM_REGISTRY_URL", "https://registry.modulehub.io/")
+	var err error
+	err = os.Setenv("MH_API_BASE_URL", "https://api.v2.modulehub.io/")
+	if err != nil {
+		panic(err)
+	}
+	err = os.Setenv("MH_APP_BASE_URL", "https://app.modulehub.io/")
+	if err != nil {
+		panic(err)
+	}
+	err = os.Setenv("MH_APP_TERRAFORM_REGISTRY_URL", "https://registry.v2.modulehub.io/")
+	if err != nil {
+		panic(err)
+	}
+	err = os.Setenv("MH_APP_HELM_REGISTRY_URL", "https://registry.modulehub.io/")
+	if err != nil {
+		panic(err)
+	}
 
-	godotenv.Overload()
+	err = godotenv.Overload()
+	if err != nil {
+		panic(err)
+	}
 	cmd.Execute()
 }
