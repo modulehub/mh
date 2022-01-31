@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"strings"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -31,6 +30,7 @@ to quickly create a Cobra application.`,
 		registryURL := viper.GetString("registry_url")
 		email := viper.GetString("email")
 		key := viper.GetString("apikey")
+		org := viper.GetString("organization")
 		pwd, _ := os.Getwd()
 		var sid string
 		if len(args) == 1 && args[0] != "" {
@@ -48,16 +48,15 @@ to quickly create a Cobra application.`,
 			sid = string(b)
 		}
 		log.Info(sid)
-		url := registryURL + "/modulehub/remote_states/" + sid
-		trCmd := []string{"-backend-config=address=" + url + "",
-			"-backend-config=lock_address=" + url + "/lock",
-			"-backend-config=unlock_address=" + url + "/unlock",
-			"-backend-config=username=" + email + "",
-			"-backend-config=password=" + key + "",
-			"-backend-config=lock_method=POST",
-			"-backend-config=unlock_method=POST"}
-		tfcmd := exec.Command("terraform", "init", strings.Join(trCmd, " "))
-		// log.Info(tfcmd.String())
+		url := fmt.Sprintf("%s/%s/remote_states/%s", registryURL, org, sid)
+		tfcmd := exec.Command("terraform", "init", `-backend-config=address=`+url+``,
+			`-backend-config=lock_address=`+url+`/lock`,
+			`-backend-config=unlock_address=`+url+`/unlock`,
+			`-backend-config=username=`+email+``,
+			`-backend-config=password=`+key+``,
+			`-backend-config=lock_method=POST`,
+			`-backend-config=unlock_method=POST`)
+		log.Info(tfcmd.String())
 		switch runtime.GOOS {
 		case "darwin":
 			otpt, err = tfcmd.CombinedOutput()

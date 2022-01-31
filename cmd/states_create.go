@@ -22,9 +22,9 @@ terraform {
 	backend "http" {
 		username = "{{ .username }}"
 		password = "{{ .key }}"
-		address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}"
-		lock_address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}/lock"
-		unlock_address = "https://registry.v2.modulehub.io/remote_states/{{ .ID }}/unlock"
+		address = "https://registry.v2.modulehub.io/{{ .ORG }}/remote_states/{{ .ID }}"
+		lock_address = "https://registry.v2.modulehub.io/{{ .ORG }}/remote_states/{{ .ID }}/lock"
+		unlock_address = "https://registry.v2.modulehub.io/{{ .ORG }}/remote_states/{{ .ID }}/unlock"
 		lock_method = "POST"
 		unlock_method = "POST"
 	}
@@ -53,7 +53,8 @@ to quickly create a Cobra application.`,
 		// Create a new HTTP client with a default timeout
 		//
 		client := util.GetClient()
-		res, err := client.Post("/organizations/"+viper.GetString("organization")+"/states", nil)
+		org := viper.GetString("organization")
+		res, err := client.Post("/organizations/"+org+"/states", nil)
 		if err != nil {
 			panic(err)
 		}
@@ -70,7 +71,7 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			panic(err)
 		}
-		err = t.Execute(os.Stdout, map[string]string{"ID": state.Data.ID, "key": viper.GetString("apikey"), "username": viper.GetString("email")})
+		err = t.Execute(os.Stdout, map[string]string{"ORG": org, "ID": state.Data.ID, "key": viper.GetString("apikey"), "username": viper.GetString("email")})
 		if err != nil {
 			panic(err)
 		}

@@ -47,7 +47,8 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			panic(err)
 		}
-		err = t.Execute(os.Stdout, map[string]string{"ID": sid, "key": viper.GetString("APIKey"), "username": viper.GetString("email")})
+		org := viper.GetString("organization")
+		err = t.Execute(os.Stdout, map[string]string{"ORG": org, "ID": sid, "key": viper.GetString("APIKey"), "username": viper.GetString("email")})
 		if err != nil {
 			panic(err)
 		}
