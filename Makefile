@@ -67,3 +67,6 @@ run:
 
 %:      # thanks to chakrit
 	@:    # thanks to William Pursell
+
+install-local: build
+	mv bin/mh /usr/local/bin/mh

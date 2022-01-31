@@ -3,8 +3,10 @@ package cmd
 import (
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"os"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -22,11 +24,30 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("showConfig called")
 
+		pwd, _ := os.Getwd()
+		var sid string
+		var err error
+		if len(args) == 1 && args[0] != "" {
+			sid = args[0]
+		} else if _, errs := os.Stat(pwd + "/.mhrc"); errs == nil {
+			log.Info(".mhrc found")
+			file, erro := os.Open(".mhrc")
+			if erro != nil {
+				log.Fatal(err)
+			}
+			b, errb := ioutil.ReadAll(file)
+			if errb != nil {
+				log.Fatal(err)
+			}
+			sid = string(b)
+		}
+		log.Info(sid)
+
 		t, err := template.New("state").Parse(stateTpl)
 		if err != nil {
 			panic(err)
 		}
-		err = t.Execute(os.Stdout, map[string]string{"ID": args[0], "key": viper.GetString("APIKey"), "username": viper.GetString("email")})
+		err = t.Execute(os.Stdout, map[string]string{"ID": sid, "key": viper.GetString("APIKey"), "username": viper.GetString("email")})
 		if err != nil {
 			panic(err)
 		}
