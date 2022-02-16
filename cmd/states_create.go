@@ -8,7 +8,7 @@ import (
 	"github.com/modulehub/mh/util"
 	"github.com/spf13/viper"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
 
@@ -62,10 +62,10 @@ to quickly create a Cobra application.`,
 		// Heimdall returns the standard *http.Response object
 		var state StateResponse
 		if e := json.NewDecoder(res.Body).Decode(&state); e != nil {
-			log.Fatal(e)
+			logrus.Fatal(e)
 		}
 
-		log.Info(fmt.Sprintf("state id: %s created.", state.Data.ID))
+		logrus.Info(fmt.Sprintf("state id: %s created.", state.Data.ID))
 
 		t, err := template.New("states").Parse(stateTpl)
 		if err != nil {

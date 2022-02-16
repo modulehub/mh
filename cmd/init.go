@@ -6,7 +6,7 @@ import (
 
 	"github.com/manifoldco/promptui"
 	"github.com/modulehub/mh/util"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -22,7 +22,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		log.Info("prerun")
+		logrus.Info("prerun")
 		if !viper.GetBool("force") && viper.Get("apikey") != nil {
 			cmd.SilenceUsage = true
 			return errors.New("Configuration exists, use --force to override")
@@ -30,7 +30,7 @@ to quickly create a Cobra application.`,
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Info("cmd init")
+		logrus.Info("cmd init")
 		validate := func(input string) error {
 			if len(input) < 5 {
 				return errors.New("invalid value")
@@ -46,11 +46,11 @@ to quickly create a Cobra application.`,
 		result, errm := prompt.Run()
 
 		if errm != nil {
-			log.Printf("Prompt failed %v\n", errm)
+			logrus.Printf("Prompt failed %v\n", errm)
 			return
 		}
 
-		log.Printf("Your mail: %q\n", result)
+		logrus.Printf("Your mail: %q\n", result)
 		viper.Set("email", result)
 
 		promptKey := promptui.Prompt{
@@ -60,7 +60,7 @@ to quickly create a Cobra application.`,
 
 		key, errk := promptKey.Run()
 		if errk != nil {
-			log.Printf("Prompt failed %v\n", errk)
+			logrus.Printf("Prompt failed %v\n", errk)
 			return
 		}
 		viper.Set("apikey", key)
@@ -72,13 +72,13 @@ to quickly create a Cobra application.`,
 
 		org, erro := promptOrg.Run()
 		if erro != nil {
-			log.Printf("Prompt failed %v\n", erro)
+			logrus.Printf("Prompt failed %v\n", erro)
 			return
 		}
 		viper.Set("organization", org)
 
 		if err := viper.WriteConfig(); err != nil {
-			log.Info(err)
+			logrus.Info(err)
 		}
 
 		fmt.Println("You're good to go!")

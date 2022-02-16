@@ -20,7 +20,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/modulehub/mh/cmd"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -44,7 +44,7 @@ func main() {
 
 	err = godotenv.Overload()
 	if err != nil {
-		log.Info("continue without .env file")
+		logrus.Info("continue without .env file")
 	}
 	cmd.Execute()
 }

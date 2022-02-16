@@ -3,11 +3,11 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/google/go-github/github"
 	"github.com/manifoldco/promptui"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
@@ -26,7 +26,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("list called")
 		if viper.GetString("token") == "" {
-			log.Fatal("configure your PAT token before calling this command")
+			logrus.Fatal("configure your PAT token before calling this command")
 		}
 		ctx := context.Background()
 		ts := oauth2.StaticTokenSource(
@@ -38,7 +38,7 @@ to quickly create a Cobra application.`,
 
 		// list all repositories for the authenticated user
 		orgs, _, err := client.Organizations.List(ctx, "", nil)
-		// log.Print(orgs)
+		// logrus.Print(orgs)
 
 		var organizations []string
 		var organization *github.Organization
@@ -46,7 +46,7 @@ to quickly create a Cobra application.`,
 			strPointerValue := *organization.Login
 			organizations = append(organizations, strPointerValue)
 		}
-		log.Print(err)
+		logrus.Print(err)
 
 		searcher := func(input string, index int) bool {
 			org := organizations[index]

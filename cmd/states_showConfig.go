@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -30,18 +30,18 @@ to quickly create a Cobra application.`,
 		if len(args) == 1 && args[0] != "" {
 			sid = args[0]
 		} else if _, errs := os.Stat(pwd + "/.mhrc"); errs == nil {
-			log.Info(".mhrc found")
+			logrus.Info(".mhrc found")
 			file, erro := os.Open(".mhrc")
 			if erro != nil {
-				log.Fatal(err)
+				logrus.Fatal(err)
 			}
 			b, errb := ioutil.ReadAll(file)
 			if errb != nil {
-				log.Fatal(err)
+				logrus.Fatal(err)
 			}
 			sid = string(b)
 		}
-		log.Info(sid)
+		logrus.Info(sid)
 
 		t, err := template.New("state").Parse(stateTpl)
 		if err != nil {

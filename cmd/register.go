@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/modulehub/mh/util"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -44,11 +44,11 @@ to quickly create a Cobra application.`,
 		// result, err := prompt.Run()
 
 		// if err != nil {
-		// 	log.Printf("Prompt failed %v\n", err)
+		// 	logrus.Printf("Prompt failed %v\n", err)
 		// 	return
 		// }
 
-		// log.Printf("Your mail: %q\n", result)
+		// logrus.Printf("Your mail: %q\n", result)
 
 		// // Create a new HTTP client with a default timeout
 		// //
@@ -66,12 +66,12 @@ to quickly create a Cobra application.`,
 		// var key RegisterResponse
 
 		// if err := json.NewDecoder(res.Body).Decode(&key); err != nil {
-		// 	log.Info(err)
+		// 	logrus.Info(err)
 		// }
 
 		// if res.StatusCode != 200 {
-		// 	log.Info(res.StatusCode)
-		// 	log.Error(key.Error) //TODO resolve the error in a nicer way..
+		// 	logrus.Info(res.StatusCode)
+		// 	logrus.Error(key.Error) //TODO resolve the error in a nicer way..
 		// 	os.Exit(1)
 		// }
 
@@ -80,14 +80,14 @@ to quickly create a Cobra application.`,
 		// viper.Set("organization", key.Org)
 
 		// if err := viper.WriteConfig(); err != nil {
-		// 	log.Info(err)
+		// 	logrus.Info(err)
 		// }
 
 		// fmt.Println("Check your email for activation link")
 
 		err := util.OpenURL(os.Getenv(("MH_APP_BASE_URL")))
 		if err != nil {
-			log.Error(err)
+			logrus.Error(err)
 		}
 	},
 }

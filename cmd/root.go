@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
 
@@ -62,13 +62,13 @@ func init() {
 
 	err := viper.BindPFlag("organization", rootCmd.PersistentFlags().Lookup("organization"))
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 	rootCmd.PersistentFlags().BoolVarP(&force, "force", "f", false, "verbose output")
 
 	errf := viper.BindPFlag("force", rootCmd.PersistentFlags().Lookup("force"))
 	if errf != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 }
 
@@ -85,13 +85,13 @@ func initConfig() {
 
 	err = os.MkdirAll(configPath, 0755)
 	if err != nil { // handle failed create
-		log.Info(err)
+		logrus.Info(err)
 	} else {
-		log.Info("config file exists")
+		logrus.Info("config file exists")
 	}
 	_, err = os.OpenFile(configFile, os.O_CREATE, 0644)
 	if err != nil { // handle failed create
-		log.Info(err)
+		logrus.Info(err)
 	}
 	// ----
 	viper.SetEnvPrefix("mh") // will be uppercased automatically
@@ -101,7 +101,7 @@ func initConfig() {
 	viper.SetConfigType(configType)
 	err = viper.ReadInConfig()
 	if err != nil { // handle failed create
-		log.Info(err)
+		logrus.Info(err)
 	}
 
 	// viper.SetConfigName(".mh.local")
@@ -112,5 +112,5 @@ func initConfig() {
 	// Search config in home directory with name ".mh" (without extension).
 	viper.AutomaticEnv() // read in environment variables that match
 
-	// log.Info(viper.AllSettings())
+	// logrus.Info(viper.AllSettings())
 }

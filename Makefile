@@ -35,8 +35,8 @@ build-ci: ## Optimized build for CI
 	@rm bin/LICENSE
 
 release: ## Release with a new tag. Use like this: 'VERSION=v0.0.1 make release'
-	git-chglog --next-tag $(VERSION) -o CHANGELOG.md
-	git add CHANGELOG.md
+	git-chglog --next-tag $(VERSION) -o CHANGElogrus.md
+	git add CHANGElogrus.md
 	git commit -m "chore: update changelog for $(VERSION)"
 	git tag $(VERSION)
 	git push origin main $(VERSION)
@@ -59,8 +59,8 @@ help: ## Show this help.
 		else if (/^## .*$$/) {printf "  ${CYAN}%s${RESET}\n", substr($$1,4)} \
 		}' $(MAKEFILE_LIST)
 
-chglog: ## Generate CHANGELOG.md
-	@git-chglog -o CHANGELOG.md
+chglog: ## Generate CHANGElogrus.md
+	@git-chglog -o CHANGElogrus.md
 
 run:
 	go run main.go $(filter-out $@,$(MAKECMDGOALS))

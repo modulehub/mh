@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/modulehub/mh/util"
 	"github.com/spf13/cobra"
@@ -19,12 +19,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Info("open called")
+		logrus.Info("open called")
 		url := viper.GetString("app_url")
-		log.Info(url)
+		logrus.Info(url)
 		err := util.OpenURL(url)
 		if err != nil {
-			log.Error(err)
+			logrus.Error(err)
 		}
 	},
 }

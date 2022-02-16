@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/modulehub/mh/util"
 	"github.com/spf13/cobra"
@@ -32,7 +32,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Info("create called")
+		logrus.Info("create called")
 		// Create a new HTTP client with a default timeout
 		//
 		client := util.GetClient()
@@ -43,7 +43,7 @@ to quickly create a Cobra application.`,
 
 		var states StateListResponse
 		if e := json.NewDecoder(res.Body).Decode(&states); e != nil {
-			log.Fatal(e)
+			logrus.Fatal(e)
 		}
 		for _, state := range states.Data {
 			fmt.Println(state.ID)

@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -36,18 +36,18 @@ to quickly create a Cobra application.`,
 		if len(args) == 1 && args[0] != "" {
 			sid = args[0]
 		} else if _, errs := os.Stat(pwd + "/.mhrc"); errs == nil {
-			log.Info(".mhrc found")
+			logrus.Info(".mhrc found")
 			file, erro := os.Open(".mhrc")
 			if erro != nil {
-				log.Fatal(err)
+				logrus.Fatal(err)
 			}
 			b, errb := ioutil.ReadAll(file)
 			if errb != nil {
-				log.Fatal(err)
+				logrus.Fatal(err)
 			}
 			sid = string(b)
 		}
-		log.Info(sid)
+		logrus.Info(sid)
 		url := fmt.Sprintf("%s/%s/remote_states/%s", registryURL, org, sid)
 		tfcmd := exec.Command("terraform", "init", `-backend-config=address=`+url+``,
 			`-backend-config=lock_address=`+url+`/lock`,
@@ -56,7 +56,7 @@ to quickly create a Cobra application.`,
 			`-backend-config=password=`+key+``,
 			`-backend-config=lock_method=POST`,
 			`-backend-config=unlock_method=POST`)
-		log.Info(tfcmd.String())
+		logrus.Info(tfcmd.String())
 		switch runtime.GOOS {
 		case "darwin":
 			otpt, err = tfcmd.CombinedOutput()
@@ -64,10 +64,10 @@ to quickly create a Cobra application.`,
 			err = fmt.Errorf("unsupported platform")
 		}
 		if err != nil {
-			log.Info(string(otpt))
-			log.Fatal(err)
+			logrus.Info(string(otpt))
+			logrus.Fatal(err)
 		} else {
-			log.Info(string(otpt))
+			logrus.Info(string(otpt))
 		}
 	},
 }
